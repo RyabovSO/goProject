@@ -34,7 +34,7 @@ func writeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func saveNodeHandler(w http.ResponseWriter, r *http.Request) {
-	id := GenerateId();
+	id := GenerateId()
 	title := r.FormValue("title")
 	content := r.FormValue("content")
 
