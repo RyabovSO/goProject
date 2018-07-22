@@ -44,6 +44,11 @@ func saveNodeHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 302)
 }
 
+func GenerateId() string {
+	b := make([]byte, 16) //генерируем массив байтов
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
+}
 
 func main() {
 	fmt.Println("Listening on port :3000")
@@ -59,8 +64,3 @@ func main() {
 	http.ListenAndServe(":3000", nil)
 }
 
-func GenerateId() string {
-	b := make([]byte, 16) //генерируем массив байтов
-	rand.Read(b)
-	return fmt.Sprintf("%x", b)
-}
