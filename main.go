@@ -73,6 +73,18 @@ func saveNodeHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 302)
 }
 
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	if id == "" {
+		http.NotFound(w, r)
+		return
+	}
+
+	delete(nodes, id)
+
+	http.Redirect(w, r, "/", 302)
+}
+
 func GenerateId() string {
 	b := make([]byte, 16) //генерируем массив байтов
 	rand.Read(b)
@@ -89,6 +101,7 @@ func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/write", writeHandler)
 	http.HandleFunc("/edit", editHandler)
+	http.HandleFunc("/delete", deleteHandler)
 	http.HandleFunc("/saveNode", saveNodeHandler)
 
 	http.ListenAndServe(":3000", nil)
