@@ -36,8 +36,8 @@ func saveNodeHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	content := r.FormValue("content")
 
-	post := models.NewPost(id, title, content)
-	post[post.Id] = post
+	node := models.NewNode(id, title, content)
+	node[node.Id] = node
 
 	http.Redirect(w, r, "/", 302)
 }
