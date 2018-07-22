@@ -8,7 +8,7 @@ import (
 	"github.com/RyabovSO/goProject/models"
 )
 
-var posts map[string]*models.Post 
+var nodes map[string]*models.Node 
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("templates/index.html", "templates/header.html", "templates/footer.html")
@@ -16,7 +16,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, err.Error())
 	}
 
-	fmt.Println(posts)
+	fmt.Println(nodes)
 
 	t.ExecuteTemplate(w, "index", nil)
 }
@@ -37,7 +37,7 @@ func saveNodeHandler(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("content")
 
 	node := models.NewNode(id, title, content)
-	node[node.Id] = node
+	nodes[node.Id] = node
 
 	http.Redirect(w, r, "/", 302)
 }
@@ -46,7 +46,7 @@ func saveNodeHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	fmt.Println("Listening on port :3000")
 
-	post = make(map[string]*models.Post, 0)
+	nodes = make(map[string]*models.Node, 0)
 
 	// /css/app.css
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
