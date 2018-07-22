@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"crypto/rand"
+
 	"github.com/RyabovSO/goProject/models"
 )
 
@@ -55,4 +57,10 @@ func main() {
 	http.HandleFunc("/saveNode", saveNodeHandler)
 
 	http.ListenAndServe(":3000", nil)
+}
+
+func GenerateId() string {
+	b := make([]byte, 16) //генерируем массив байтов
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
 }
