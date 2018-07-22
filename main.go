@@ -20,7 +20,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(nodes)
 
-	t.ExecuteTemplate(w, "index", nil)
+	t.ExecuteTemplate(w, "index", nodes)
 }
 
 func writeHandler(w http.ResponseWriter, r *http.Request) {
