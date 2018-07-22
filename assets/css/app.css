@@ -6,3 +6,17 @@ textarea {
   	width: 100%; 
     height: 200px;
 }
+.node{
+	width: 10em;
+  	height: 10em;
+  	border: 2px solid red;
+  	border-radius: 50%;
+  	background: mistyrose;
+  	margin-bottom: 10px;
+}
+.node-title{
+
+}
+.node-content{
+
+}
