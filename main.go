@@ -7,6 +7,7 @@ import (
 
 	"crypto/rand"
 
+	"github.com/go-martini/martini"
 	"github.com/RyabovSO/goProject/models"
 )
 
@@ -96,14 +97,20 @@ func main() {
 
 	nodes = make(map[string]*models.Node, 0)
 
-	// /css/app.css
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/write", writeHandler)
-	http.HandleFunc("/edit", editHandler)
-	http.HandleFunc("/delete", deleteHandler)
-	http.HandleFunc("/saveNode", saveNodeHandler)
+	m := martini.Classic()
 
-	http.ListenAndServe(":3000", nil)
+	staticOptions := martini.StaticOptions{Prefix: "assets"}
+	m.Use(martini.Static("assets", staticOptions))
+	m.Get("/", indexHandler)
+	m.Get("/write", writeHandler)
+	m.Get("/edit", editHandler)
+	m.Get("/delete", deleteHandler)
+	m.Post("/saveNode", saveNodeHandler)
+
+	m.Get("/test", func() string{
+		return "test"
+	})
+
+	m.Run();
 }
 
