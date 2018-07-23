@@ -2,57 +2,44 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"crypto/rand"
 
 	"github.com/go-martini/martini"
+	"github.com/martini-contrib/render"
 	"github.com/RyabovSO/goProject/models"
+	
 )
 
 var nodes map[string]*models.Node 
+var counter int
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("templates/index.html", "templates/header.html", "templates/footer.html")
-	if err != nil {
-		fmt.Fprintf(w, err.Error())
-	}
+func indexHandler(rnd render.Render) {
+	fmt.Println(counter)
 
-	fmt.Println(nodes)
-
-	t.ExecuteTemplate(w, "index", nodes)
+	rnd.HTML(200, "index", nodes)
 }
 
-func writeHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("templates/write.html", "templates/header.html", "templates/footer.html")
-	if err != nil {
-		fmt.Fprintf(w, err.Error())
-		return
-	}
-
-	t.ExecuteTemplate(w, "write", nil)
+func writeHandler(rnd render.Render) {
+	rnd.HTML(200, "write", nil)
 }
 
-func editHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("templates/write.html", "templates/header.html", "templates/footer.html")
-	if err != nil {
-		fmt.Fprintf(w, err.Error())
-		return
-	}
-
+func editHandler(rnd render.Render, r *http.Request) {
+	
 	id := r.FormValue("id")
 	// ищем ноду в нашей мапе в ключом id
 	node, found := nodes[id]
-	//если не нашел, то даем ему NotFound
-	if !found {
-		http.NotFound(w, r)
+	//если не нашел, то редиректим на главную
+	if !found {	
+		rnd.Redirect("/")
+		return
 	}
-	//передать ноду в write
-	t.ExecuteTemplate(w, "write", node )
+
+	rnd.HTML(200, "write", node)	
 }
 
-func saveNodeHandler(w http.ResponseWriter, r *http.Request) {
+func saveNodeHandler(rnd render.Render, r *http.Request) {
 	//id := GenerateId()
 	id := r.FormValue("id")
 	title := r.FormValue("title")
@@ -71,19 +58,19 @@ func saveNodeHandler(w http.ResponseWriter, r *http.Request) {
 		nodes[node.Id] = node
 	}	
 
-	http.Redirect(w, r, "/", 302)
+	rnd.Redirect("/")
 }
 
-func deleteHandler(w http.ResponseWriter, r *http.Request) {
+func deleteHandler(rnd render.Render, r *http.Request) {
 	id := r.FormValue("id")
 	if id == "" {
-		http.NotFound(w, r)
+		rnd.Redirect("/")
 		return
 	}
 
 	delete(nodes, id)
 
-	http.Redirect(w, r, "/", 302)
+	rnd.Redirect("/")
 }
 
 func GenerateId() string {
@@ -99,6 +86,16 @@ func main() {
 
 	m := martini.Classic()
 
+	m.Use(render.Renderer(render.Options{
+  		Directory: "templates", 					// Specify what path to load the templates from.
+  		Layout: "layout", 							// Specify a layout template. Layouts can call {{ yield }} to render the current template.
+  		Extensions: []string{".tmpl", ".html"}, 	// Specify extensions to load for templates.
+  		//Funcs: []template.FuncMap{AppHelpers}, 	// Specify helper function maps for templates to access.
+  		//Delims: render.Delims{"{[{", "}]}"}, 		// Sets delimiters to the specified strings.
+  		Charset: "UTF-8", 							// Sets encoding for json and html content-types. Default is "UTF-8".
+  		IndentJSON: true, 							// Output human readable JSON
+	}))
+
 	staticOptions := martini.StaticOptions{Prefix: "assets"}
 	m.Use(martini.Static("assets", staticOptions))
 	m.Get("/", indexHandler)
@@ -107,10 +104,18 @@ func main() {
 	m.Get("/delete", deleteHandler)
 	m.Post("/saveNode", saveNodeHandler)
 
+
+	//тестовая функция для счетчика
+	counter = 0
+	m.Use(func(r *http.Request) {
+		//если метод write то counter++
+		if r.URL.Path == "/write" {
+			counter++
+		}
+	})
 	m.Get("/test", func() string{
 		return "test"
 	})
 
 	m.Run();
 }
-
