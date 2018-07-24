@@ -44,9 +44,9 @@ func editHandler(rnd render.Render, r *http.Request) {
 	id := r.FormValue("id")
 
 	nodeDocument := documents.NodeDocument{}
-	err := nodesCollection.FindId(id).One(&nodeDocuments)
+	err := nodesCollection.FindId(id).One(&nodeDocument)
 	//если не нашел, то редиректим на главную
-	if !found {	
+	if err != nil {	
 		rnd.Redirect("/")
 		return
 	}
@@ -59,7 +59,7 @@ func saveNodeHandler(rnd render.Render, r *http.Request) {
 	//id := GenerateId()
 	id := r.FormValue("id")
 	title := r.FormValue("title")
-	content := r.FormValue("content")
+	contentHtml := r.FormValue("content")
 
 	nodeDocument := documents.NodeDocument{id, title, contentHtml}
 	//если id не пустая строка (значит мы редактировали)
