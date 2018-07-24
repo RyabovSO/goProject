@@ -8,33 +8,49 @@ import (
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
+	"github.com/RyabovSO/goProject/db/documents"
 	"github.com/RyabovSO/goProject/models"
-	
+	"github.com/tobyzxj/mgo"
 )
 
-var nodes map[string]*models.Node 
-var counter int
+ 
+var nodesCollection *mgo.Collection
 
 func indexHandler(rnd render.Render) {
-	fmt.Println(counter)
+	nodeDocuments := []documents.NodeDocument{}
+	nodesCollection.Find(nil).All(&nodeDocuments)
+
+	nodes := []models.Node{}
+	for _, doc :=  range nodeDocuments {
+		node := models.Node{doc.Id, doc.Title, doc.ContentHtml}
+		nodes = append(nodes, node)
+	}
 
 	rnd.HTML(200, "index", nodes)
 }
 
-func writeHandler(rnd render.Render) {
+//old
+/*func writeHandler(rnd render.Render) {
 	rnd.HTML(200, "write", nil)
+}*/
+
+func writeHandler(rnd render.Render) {
+	node := models.Node{}
+	rnd.HTML(200, "write", node)
 }
 
 func editHandler(rnd render.Render, r *http.Request) {
 	
 	id := r.FormValue("id")
-	// ищем ноду в нашей мапе в ключом id
-	node, found := nodes[id]
+
+	nodeDocument := documents.NodeDocument{}
+	err := nodesCollection.FindId(id).One(&nodeDocuments)
 	//если не нашел, то редиректим на главную
 	if !found {	
 		rnd.Redirect("/")
 		return
 	}
+	node := models.Node{nodeDocument.Id, nodeDocument.Title, nodeDocument.ContentHtml}
 
 	rnd.HTML(200, "write", node)	
 }
@@ -45,17 +61,14 @@ func saveNodeHandler(rnd render.Render, r *http.Request) {
 	title := r.FormValue("title")
 	content := r.FormValue("content")
 
-	var node *models.Node
+	nodeDocument := documents.NodeDocument{id, title, contentHtml}
 	//если id не пустая строка (значит мы редактировали)
 	if id != "" {
-		node = nodes[id]
-		node.Title = title
-		node.Content = content
+		nodesCollection.UpdateId(id, nodeDocument)
 	} else {
 		id = GenerateId()
-		node := models.NewNode(id, title, content)
-		//создали ноду и добавляем ее в наш map
-		nodes[node.Id] = node
+		nodeDocument.Id = id
+		nodesCollection.Insert(nodeDocument)
 	}	
 
 	rnd.Redirect("/")
@@ -68,8 +81,7 @@ func deleteHandler(rnd render.Render, r *http.Request) {
 		return
 	}
 
-	delete(nodes, id)
-
+	nodesCollection.RemoveId(id)
 	rnd.Redirect("/")
 }
 
@@ -82,7 +94,12 @@ func GenerateId() string {
 func main() {
 	fmt.Println("Listening on port :3000")
 
-	nodes = make(map[string]*models.Node, 0)
+	session, err := mgo.Dial("localhost")
+	if err != nil {
+		panic(err)
+	}
+
+	nodesCollection = session.DB("blog").C("nodes")
 
 	m := martini.Classic()
 
@@ -103,19 +120,6 @@ func main() {
 	m.Get("/edit", editHandler)
 	m.Get("/delete", deleteHandler)
 	m.Post("/saveNode", saveNodeHandler)
-
-
-	//тестовая функция для счетчика
-	counter = 0
-	m.Use(func(r *http.Request) {
-		//если метод write то counter++
-		if r.URL.Path == "/write" {
-			counter++
-		}
-	})
-	m.Get("/test", func() string{
-		return "test"
-	})
 
 	m.Run();
 }
