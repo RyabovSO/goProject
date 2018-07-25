@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 	"net/http"
-
 	"crypto/rand"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
-	"github.com/RyabovSO/goProject/db/documents"
-	"github.com/RyabovSO/goProject/models"
 	"github.com/tobyzxj/mgo"
+	"github.com/RyabovSO/goProject/db/documents"
+	"github.com/RyabovSO/goProject/models"	
 )
 
  
