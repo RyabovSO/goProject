@@ -5,11 +5,13 @@ import (
 	"net/http"
 	"crypto/rand"
 
-	"github.com/go-martini/martini"
-	"github.com/martini-contrib/render"
-	"github.com/tobyzxj/mgo"
 	"github.com/RyabovSO/goProject/db/documents"
 	"github.com/RyabovSO/goProject/models"	
+
+	"github.com/go-martini/martini"
+	"github.com/martini-contrib/render"
+
+	"gopkg.in/mgo.v2"
 )
 
  
@@ -28,20 +30,13 @@ func indexHandler(rnd render.Render) {
 	rnd.HTML(200, "index", nodes)
 }
 
-//old
-/*func writeHandler(rnd render.Render) {
-	rnd.HTML(200, "write", nil)
-}*/
-
 func writeHandler(rnd render.Render) {
 	node := models.Node{}
 	rnd.HTML(200, "write", node)
 }
 
 func editHandler(rnd render.Render, r *http.Request) {
-	
 	id := r.FormValue("id")
-
 	nodeDocument := documents.NodeDocument{}
 	err := nodesCollection.FindId(id).One(&nodeDocument)
 	//если не нашел, то редиректим на главную
