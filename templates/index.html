@@ -1,14 +1,16 @@
-{{ range $key, $value := . }}
-<div class="container node">
-	<div class="row">
-		<div class="col-xs-1 node-title">
-			<h1><a href="/edit/{{$key}}">{{ $value.Title }}</a></h1>
+<div>
+	{{ range $value := . }}
+	<div class="container node">
+		<div class="row">
+			<div class="col-xs-1 node-title">
+				<h1><a href="/edit/{{$value.Id}}">{{ $value.Title }}</a></h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-1 node-content">
+				{{ $value.Content }}
+			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-xs-1 node-content">
-			{{ $value.Content }}
-		</div>
-	</div>
+	{{ end }}
 </div>
-{{ end }}

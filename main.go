@@ -37,7 +37,7 @@ func writeHandler(rnd render.Render) {
 
 func editHandler(rnd render.Render, r *http.Request, params martini.Params) {
 	id := params["id"]
-	fmt.Println(id)
+	//fmt.Println(id)
 	nodeDocument := documents.NodeDocument{}
 	err := nodesCollection.FindId(id).One(&nodeDocument)
 	//если не нашел, то редиректим на главную
@@ -62,7 +62,7 @@ func saveNodeHandler(rnd render.Render, r *http.Request) {
 		nodesCollection.UpdateId(id, nodeDocument)
 	} else {
 		id = GenerateId()
-		fmt.Println(id)
+		//fmt.Println(id)
 		nodeDocument.Id = id
 		nodesCollection.Insert(nodeDocument)
 	}	
