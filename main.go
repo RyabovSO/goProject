@@ -35,15 +35,16 @@ func writeHandler(rnd render.Render) {
 	rnd.HTML(200, "write", node)
 }
 
-func editHandler(rnd render.Render, r *http.Request) {
-	id := r.FormValue("id")
+func editHandler(rnd render.Render, r *http.Request, params martini.Params) {
+	id := params["id"]
+	fmt.Println(id)
 	nodeDocument := documents.NodeDocument{}
 	err := nodesCollection.FindId(id).One(&nodeDocument)
 	//если не нашел, то редиректим на главную
 	if err != nil {	
 		rnd.Redirect("/")
 		return
-	}
+	} else { fmt.Println(err) }
 	node := models.Node{nodeDocument.Id, nodeDocument.Title, nodeDocument.ContentHtml}
 
 	rnd.HTML(200, "write", node)	
@@ -61,6 +62,7 @@ func saveNodeHandler(rnd render.Render, r *http.Request) {
 		nodesCollection.UpdateId(id, nodeDocument)
 	} else {
 		id = GenerateId()
+		fmt.Println(id)
 		nodeDocument.Id = id
 		nodesCollection.Insert(nodeDocument)
 	}	
@@ -68,8 +70,8 @@ func saveNodeHandler(rnd render.Render, r *http.Request) {
 	rnd.Redirect("/")
 }
 
-func deleteHandler(rnd render.Render, r *http.Request) {
-	id := r.FormValue("id")
+func deleteHandler(rnd render.Render, r *http.Request, params martini.Params) {
+	id := params["id"]
 	if id == "" {
 		rnd.Redirect("/")
 		return
@@ -101,7 +103,7 @@ func main() {
   		Directory: "templates", 					// Specify what path to load the templates from.
   		Layout: "layout", 							// Specify a layout template. Layouts can call {{ yield }} to render the current template.
   		Extensions: []string{".tmpl", ".html"}, 	// Specify extensions to load for templates.
-  		//Funcs: []template.FuncMap{AppHelpers}, 	// Specify helper function maps for templates to access.
+  		//Funcs: []template.FuncMap{unescapeFuncMap}, 	    // Specify helper function maps for templates to access.
   		//Delims: render.Delims{"{[{", "}]}"}, 		// Sets delimiters to the specified strings.
   		Charset: "UTF-8", 							// Sets encoding for json and html content-types. Default is "UTF-8".
   		IndentJSON: true, 							// Output human readable JSON
@@ -111,8 +113,8 @@ func main() {
 	m.Use(martini.Static("assets", staticOptions))
 	m.Get("/", indexHandler)
 	m.Get("/write", writeHandler)
-	m.Get("/edit", editHandler)
-	m.Get("/delete", deleteHandler)
+	m.Get("/edit/:id", editHandler)
+	m.Get("/delete/:id", deleteHandler)
 	m.Post("/saveNode", saveNodeHandler)
 
 	m.Run();
