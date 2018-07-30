@@ -1,16 +1,39 @@
-<div>
-	{{ range $value := . }}
-	<div class="container node">
-		<div class="row">
-			<div class="col-xs-1 node-title">
-				<h1><a href="/edit/{{$value.Id}}">{{ $value.Title }}</a></h1>
+<div class="container">
+	<div class="row">
+		{{ range $value := . }}
+		<div class="level-1">
+			<div class="node-1">
+				<div class="node">
+					<div class="node-title">
+						<a href="/edit/{{$value.Id}}">{{ $value.Title }}</a>
+					</div>
+					<div class="node-content">
+					{{ $value.Content }}
+					</div>
+					<div class="level-2">
+						<div class="node-1">
+							<div class="node">
+								<div class="node-title">
+									<a href="">Дочерняя нода1</a>
+								</div>
+							</div>
+							<div class="node">
+								<div class="node-title">
+									<a href="">Дочерняя нода1</a>
+								</div>
+							</div>
+							<div class="node">
+								<div class="node-title">
+									<a href="">Дочерняя нода1</a>
+								</div>
+							</div>						
+						</div>
+
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-xs-1 node-content">
-				{{ $value.Content }}
-			</div>
-		</div>
-	</div>
-	{{ end }}
+		{{ end }}
+		
+	</div>	
 </div>
