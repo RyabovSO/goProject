@@ -1,18 +1,14 @@
 <div class="container">
 	<div class="row">
 		{{ range $value := . }}
-		<div class="level-1">
-			<div class="node-1">
-				<div class="node">
-					<div class="node-title">
-						<a href="/edit/{{$value.Id}}">{{ $value.Title }}</a>
-					</div>
-					<div class="node-content">
+			<div class="node">
+				<div class="title">
+					<a href="/edit/{{$value.Id}}">{{ $value.Title }}</a>
+				</div>
+				<div class="content">
 					{{ $value.Content }}
-					</div>
 				</div>
 			</div>
-		</div>
 		{{ end }}
 		
 	</div>	

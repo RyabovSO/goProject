@@ -17,6 +17,16 @@ import (
  
 var nodesCollection *mgo.Collection
 
+func getLoginHandler(rnd render.Render) {
+	rnd.HTML(200, "login", nil)
+}
+
+func postLoginHandler(rnd render.Render, r *http.Request) {
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+	rnd.Redirect("/")
+}
+
 func indexHandler(rnd render.Render) {
 	nodeDocuments := []documents.NodeDocument{}
 	nodesCollection.Find(nil).All(&nodeDocuments)
@@ -50,7 +60,7 @@ func editHandler(rnd render.Render, r *http.Request, params martini.Params) {
 	rnd.HTML(200, "write", node)	
 }
 
-func saveNodeHandler(rnd render.Render, r *http.Request) {
+func saveHandler(rnd render.Render, r *http.Request) {
 	//id := GenerateId()
 	id := r.FormValue("id")
 	title := r.FormValue("title")
@@ -96,7 +106,6 @@ func main() {
 	}
 
 	nodesCollection = session.DB("blog").C("nodes")
-
 	m := martini.Classic()
 
 	m.Use(render.Renderer(render.Options{
@@ -112,10 +121,12 @@ func main() {
 	staticOptions := martini.StaticOptions{Prefix: "assets"}
 	m.Use(martini.Static("assets", staticOptions))
 	m.Get("/", indexHandler)
+	m.Get("/login", getLoginHandler)
+	m.Post("/login", postLoginHandler)
 	m.Get("/write", writeHandler)
 	m.Get("/edit/:id", editHandler)
 	m.Get("/delete/:id", deleteHandler)
-	m.Post("/saveNode", saveNodeHandler)
+	m.Post("/save", saveHandler)
 
 	m.Run();
 }

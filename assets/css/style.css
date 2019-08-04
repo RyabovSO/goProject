@@ -1,1 +1,21 @@
-.level-1{background:mistyrose;border-radius:50%;border:2px solid red;width:150px;height:150px}.level-1 .node-title{font-size:18px}.level-1 .node-content{font-size:12px}.level-1 .node-title,.level-1 .node-content{position:relative;top:20px;left:20px}.level-1 .node-1{position:relative;left:0px;top:0px}.level-2 .node-title{font-size:14px}.level-2 .node-content{font-size:16px}.level-2 .node-title,.level-2 .node-content{position:relative;top:40px;left:20px}.level-2 .node:nth-child(n)::before{content:"";background:darkseagreen;border-radius:50%;border:2px solid blue;width:100px;height:100px;display:block;position:absolute}.level-2 .node-1 .node:nth-child(1){position:absolute;left:0px;top:80px}.level-2 .node-1 .node:nth-child(2){position:absolute;left:90px;top:100px}.level-2 .node-1 .node:nth-child(3){position:absolute;left:140px;top:10px}
+textarea {
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s; }
+
+.navbar-nav > li {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 18px;
+  line-height: 20px; }
