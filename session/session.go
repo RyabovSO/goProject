@@ -27,9 +27,9 @@ func (s *Session) Init(username string) string {
 	return sessionId
 }
 
-func (s *Session) Get(sessionId string) *username {
+func (s *Session) Get(sessionId string) string {
 	data := s.data[sessionId]
-	if data = nil {
+	if data == nil {
 		return ""
 	}
 	return data.Username
