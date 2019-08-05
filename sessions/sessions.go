@@ -1,4 +1,4 @@
-packadge session
+package session
 
 type sessionData struct {
 	username string

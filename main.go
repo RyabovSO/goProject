@@ -73,7 +73,7 @@ func saveHandler(rnd render.Render, r *http.Request) {
 	if id != "" {
 		nodesCollection.UpdateId(id, nodeDocument)
 	} else {
-		id = GenerateId()
+		id = utils.GenerateId()
 		//fmt.Println(id)
 		nodeDocument.Id = id
 		nodesCollection.Insert(nodeDocument)
