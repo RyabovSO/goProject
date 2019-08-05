@@ -46,8 +46,10 @@ func postLoginHandler(rnd render.Render, r *http.Request, w http.ResponseWriter)
 
 func indexHandler(rnd render.Render, r *http.Request) {
 	cookie, _ := r.Cookie(COOKIE_NAME)
-	fmt.Println(inMemorySession.Get(cookie.Value))
-
+	if cookie != nil {
+		fmt.Println(inMemorySession.Get(cookie.Value))
+	}
+	
 	nodeDocuments := []documents.NodeDocument{}
 	nodesCollection.Find(nil).All(&nodeDocuments)
 
