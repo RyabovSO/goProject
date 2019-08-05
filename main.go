@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/RyabovSO/goProject/"
+	"github.com/RyabovSO/goProject/utils"
 	"github.com/RyabovSO/goProject/db/documents"
 	"github.com/RyabovSO/goProject/models"	
 	"github.com/go-martini/martini"
@@ -21,11 +21,11 @@ func getLoginHandler(rnd render.Render) {
 }
 
 func postLoginHandler(rnd render.Render, r *http.Request) {
-	username := r.FormValue("username")
-	password := r.FormValue("password")
+	//username := r.FormValue("username")
+	//password := r.FormValue("password")
 
-	fmt.Println(username)
-	fmt.Println(password)
+	//fmt.Println(username)
+	//fmt.Println(password)
 	rnd.Redirect("/")
 }
 
