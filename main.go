@@ -14,19 +14,32 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
+const (
+	COOKIE_NAME = "sessionId"
+)
  
 var nodesCollection *mgo.Collection
+var inMemorySession * session.Session
 
 func getLoginHandler(rnd render.Render) {
 	rnd.HTML(200, "login", nil)
 }
 
-func postLoginHandler(rnd render.Render, r *http.Request) {
-	//username := r.FormValue("username")
-	//password := r.FormValue("password")
+func postLoginHandler(rnd render.Render, r *http.Request, w http.ResponseWriter) {
+	username := r.FormValue("username")
+	password := r.FormValue("password")
 
-	//fmt.Println(username)
-	//fmt.Println(password)
+	fmt.Println(username)
+	fmt.Println(password)
+
+	sessionId := inMemorySession.Init(username)
+
+	cookie := &http.Cookie{
+		Name: COOKIE_NAME,
+		Value: sessionId,
+		Expires: time.Now().Add(5 * time.Minute),
+	}
+	http.SetCookie(w, cookie)
 	rnd.Redirect("/")
 }
 
@@ -96,6 +109,8 @@ func deleteHandler(rnd render.Render, r *http.Request, params martini.Params) {
 
 func main() {
 	fmt.Println("Listening on port :3000")
+
+	inMemorySession = session.NewSession()
 
 	session, err := mgo.Dial("localhost")
 	if err != nil {
