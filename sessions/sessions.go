@@ -1,7 +1,11 @@
 package session
 
+import (
+	"github.com/RyabovSO/goProject/utils"
+	)
+
 type sessionData struct {
-	username string
+	Username string
 }
 
 type Session struct {
@@ -16,5 +20,9 @@ func NewSession() *Session {
 }
 
 func (s *Session) init(username string) string {
-	
+	sessionId := utils.GenerateId()
+	data := &sessionData(Username: username)
+	s.data[sessionId] = data
+
+	return sessionId
 }
