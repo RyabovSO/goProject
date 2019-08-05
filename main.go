@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/RyabovSO/goProject/db/documents"
 	"github.com/RyabovSO/goProject/models"	
@@ -43,7 +44,10 @@ func postLoginHandler(rnd render.Render, r *http.Request, w http.ResponseWriter)
 	rnd.Redirect("/")
 }
 
-func indexHandler(rnd render.Render) {
+func indexHandler(rnd render.Render, r *http.Request) {
+	cookie, _ := r.Cookie(COOKIE_NAME)
+	fmt.Println(inMemorySession.Get(cookie.Value))
+
 	nodeDocuments := []documents.NodeDocument{}
 	nodesCollection.Find(nil).All(&nodeDocuments)
 
