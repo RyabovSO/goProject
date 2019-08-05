@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/RyabovSO/goProject/utils"
+	"github.com/RyabovSO/goProject/session"
 	"github.com/RyabovSO/goProject/db/documents"
 	"github.com/RyabovSO/goProject/models"	
 	"github.com/go-martini/martini"
