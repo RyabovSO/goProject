@@ -13,8 +13,37 @@ textarea{
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
+body{
+    background: #eef1f6;
+}
+
 .navbar-nav > li {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 18px;
     line-height: 20px;
+}
+
+.item > .title, .item > .edit, .item > .delete{
+    display: inline-block;
+}
+
+.item > .edit, .item > .delete{
+    float: right;
+    vertical-align: top;
+    margin-left:5px;
+}
+
+.item{
+    background: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    margin:4px;
+}
+
+.btn-delete{
+    float: right;
+}
+
+.item:hover{
+
 }

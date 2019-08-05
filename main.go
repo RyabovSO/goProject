@@ -20,7 +20,7 @@ const (
 )
  
 var nodesCollection *mgo.Collection
-var inMemorySession * session.Session
+var inMemorySession *session.Session
 
 func getLoginHandler(rnd render.Render) {
 	rnd.HTML(200, "login", nil)
@@ -34,12 +34,12 @@ func postLoginHandler(rnd render.Render, r *http.Request, w http.ResponseWriter)
 	fmt.Println(password)
 
 	sessionId := inMemorySession.Init(username)
-
 	cookie := &http.Cookie{
 		Name: COOKIE_NAME,
 		Value: sessionId,
 		Expires: time.Now().Add(5 * time.Minute),
 	}
+
 	http.SetCookie(w, cookie)
 	rnd.Redirect("/")
 }
@@ -49,7 +49,7 @@ func indexHandler(rnd render.Render, r *http.Request) {
 	if cookie != nil {
 		fmt.Println(inMemorySession.Get(cookie.Value))
 	}
-	
+
 	nodeDocuments := []documents.NodeDocument{}
 	nodesCollection.Find(nil).All(&nodeDocuments)
 
@@ -113,8 +113,13 @@ func deleteHandler(rnd render.Render, r *http.Request, params martini.Params) {
 	rnd.Redirect("/")
 }
 
+func faviconHandler (w  http.ResponseWriter, r *http.Request) {
+  http.ServeFile (w, r, "favicon.ico" )
+}
+
 func main() {
 	fmt.Println("Listening on port :3000")
+	http.HandleFunc( "/favicon.ico", faviconHandler)
 
 	inMemorySession = session.NewSession()
 
@@ -127,13 +132,13 @@ func main() {
 	m := martini.Classic()
 
 	m.Use(render.Renderer(render.Options{
-  		Directory: "templates", 					// Specify what path to load the templates from.
-  		Layout: "layout", 							// Specify a layout template. Layouts can call {{ yield }} to render the current template.
-  		Extensions: []string{".tmpl", ".html"}, 	// Specify extensions to load for templates.
-  		//Funcs: []template.FuncMap{unescapeFuncMap}, 	    // Specify helper function maps for templates to access.
-  		//Delims: render.Delims{"{[{", "}]}"}, 		// Sets delimiters to the specified strings.
-  		Charset: "UTF-8", 							// Sets encoding for json and html content-types. Default is "UTF-8".
-  		IndentJSON: true, 							// Output human readable JSON
+  		Directory: "templates", 					 // Specify what path to load the templates from.
+  		Layout: "layout", 							 // Specify a layout template. Layouts can call {{ yield }} to render the current template.
+  		Extensions: []string{".tmpl", ".html"}, 	 // Specify extensions to load for templates.
+  		//Funcs: []template.FuncMap{unescapeFuncMap},// Specify helper function maps for templates to access.
+  		//Delims: render.Delims{"{[{", "}]}"}, 		 // Sets delimiters to the specified strings.
+  		Charset: "UTF-8", 							 // Sets encoding for json and html content-types. Default is "UTF-8".
+  		IndentJSON: true, 							 // Output human readable JSON
 	}))
 
 	staticOptions := martini.StaticOptions{Prefix: "assets"}

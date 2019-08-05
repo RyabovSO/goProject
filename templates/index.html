@@ -1,15 +1,22 @@
 <div class="container">
 	<div class="row">
-		{{ range $value := . }}
-			<div class="node">
-				<div class="title">
-					<a href="/edit/{{$value.Id}}">{{ $value.Title }}</a>
+		<div class="col-lg-12">
+			{{ range $value := . }}
+				<div class="item">
+					<div class="title">
+						<label>{{ $value.Title }}</label>
+					</div>
+					<div class="delete">
+						<a href="/delete/{{$value.Id}}">Удалить</a>
+					</div>
+					<div class="edit">
+						<a href="/edit/{{$value.Id}}">Редактировать</a>
+					</div>
+					<div class="content">
+						{{ $value.Content }}
+					</div>
 				</div>
-				<div class="content">
-					{{ $value.Content }}
-				</div>
-			</div>
-		{{ end }}
-		
+			{{ end }}
+		</div>
 	</div>	
 </div>
