@@ -3,11 +3,10 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"crypto/rand"
 
+	"github.com/RyabovSO/goProject/"
 	"github.com/RyabovSO/goProject/db/documents"
 	"github.com/RyabovSO/goProject/models"	
-
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 
@@ -24,6 +23,9 @@ func getLoginHandler(rnd render.Render) {
 func postLoginHandler(rnd render.Render, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
+
+	fmt.Println(username)
+	fmt.Println(password)
 	rnd.Redirect("/")
 }
 
@@ -89,12 +91,6 @@ func deleteHandler(rnd render.Render, r *http.Request, params martini.Params) {
 
 	nodesCollection.RemoveId(id)
 	rnd.Redirect("/")
-}
-
-func GenerateId() string {
-	b := make([]byte, 16) //генерируем массив байтов
-	rand.Read(b)
-	return fmt.Sprintf("%x", b)
 }
 
 func main() {
